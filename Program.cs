@@ -1,6 +1,7 @@
 using Microsoft.Extensions.FileProviders;
 
-var builder = WebApplication.CreateBuilder();
+var builder = WebApplication.CreateBuilder(
+    new WebApplicationOptions { WebRootPath="Pages"});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -14,10 +15,14 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.UseDirectoryBrowser(new DirectoryBrowserOptions 
+{ 
+    FileProvider=new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\lib")),
+    RequestPath=new PathString("/pages")
+});
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseDefaultFiles();
 app.UseRouting();
 
 app.UseAuthorization();
